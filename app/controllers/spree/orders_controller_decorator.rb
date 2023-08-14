@@ -1,2 +1,2 @@
-Spree::OrdersController.class_eval do
+module Spree::OrdersControllerDecorator
 end

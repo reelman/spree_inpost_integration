@@ -1,10 +1,11 @@
 require "net/http"
 require "uri"
 
-Spree::CheckoutController.class_eval do
-
-  before_action :get_zip_code
-  before_action :permit_inpost_machine
+module Spree::CheckoutControllerDecorator
+  def self.prepended(base)
+    base.before_action :get_zip_code
+    base.before_action :permit_inpost_machine
+  end
 
 
   def permit_inpost_machine
@@ -21,4 +22,8 @@ Spree::CheckoutController.class_eval do
       @zipcode = @order.bill_address.zipcode     
     end
   end
+end
+
+if ::Spree::CheckoutController.included_modules.exclude?(Spree::CheckoutControllerDecorator)
+  ::Spree::CheckoutController.prepend Spree::CheckoutControllerDecorator
 end
